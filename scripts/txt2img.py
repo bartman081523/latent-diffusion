@@ -102,8 +102,6 @@ if __name__ == "__main__":
         default=5.0,
         help="unconditional guidance scale: eps = eps(x, empty) + scale * (eps(x, cond) - eps(x, empty))",
     )
-    opt = parser.parse_args()
-    
     
     parser.add_argument(
         "--seed",
@@ -111,7 +109,8 @@ if __name__ == "__main__":
         help="seed for seed_everything",
     )
 
-
+    opt = parser.parse_args()
+    
     config = OmegaConf.load("configs/latent-diffusion/txt2img-1p4B-eval.yaml")  # TODO: Optionally download from same location as ckpt and chnage this logic
     model = load_model_from_config(config, "models/ldm/text2img-large/model.ckpt")  # TODO: check path
 
