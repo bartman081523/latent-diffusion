@@ -6,6 +6,7 @@ from PIL import Image
 from tqdm import tqdm, trange
 from einops import rearrange
 from torchvision.utils import make_grid
+from pytorch_lightning import seed_everything
 
 from ldm.util import instantiate_from_config
 from ldm.models.diffusion.ddim import DDIMSampler
@@ -102,6 +103,13 @@ if __name__ == "__main__":
         help="unconditional guidance scale: eps = eps(x, empty) + scale * (eps(x, cond) - eps(x, empty))",
     )
     opt = parser.parse_args()
+    
+    
+    parser.add_argument(
+        "--seed",
+        type=int,
+        help="seed for seed_everything",
+    )
 
 
     config = OmegaConf.load("configs/latent-diffusion/txt2img-1p4B-eval.yaml")  # TODO: Optionally download from same location as ckpt and chnage this logic
@@ -119,6 +127,11 @@ if __name__ == "__main__":
     outpath = opt.outdir
 
     prompt = opt.prompt
+
+    
+    if not opt.seed:
+        opt.seed=(np.random.randint(65536, size=1))
+    seed_everything(opt.seed)
 
 
     sample_path = os.path.join(outpath, "samples")
